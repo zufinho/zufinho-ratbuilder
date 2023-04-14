@@ -1,0 +1,11 @@
+Pillow
+comtypes
+pycaw
+pyautogui
+opencv-python
+vidstream
+pynput
+keyboard
+pyinstaller
+socket
+subprocess
