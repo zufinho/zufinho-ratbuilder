@@ -109,7 +109,7 @@ except {encryptstring('__import__("lzma").LZMAError', func= True)}:...
     def encrypt3(self):
         self.compress()
         data = base64.b64encode(self.code)
-        self.code = f'import base64, lzma, Pillow, comtypes, pycaw, pyautogui, opencv-python, vidstream, pynput, keyboard, pyinstaller, socket, subprocess; exec(compile(lzma.decompress(base64.b64decode({data})), "<string>", "exec"))'.encode()
+        self.code = f'import base64, lzma; exec(compile(lzma.decompress(base64.b64decode({data})), "<string>", "exec"))'.encode()
 
     def finalize(self):
         if os.path.dirname(self.outpath).strip() != "":
