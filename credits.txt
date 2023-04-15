@@ -1,0 +1,6 @@
+credits to Blank-C to obfuscator
+https://github.com/Blank-c/BlankOBF
+
+and to the FZGbzuw412 for the python rat
+https://github.com/FZGbzuw412/Python-RAT
+(i just added the reconnect function)
