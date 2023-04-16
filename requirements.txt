@@ -9,3 +9,4 @@ keyboard
 pyinstaller
 socket
 subprocess
+shutil

