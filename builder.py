@@ -195,7 +195,7 @@ if __name__ == '__main__':
         server.close()
         print("server created")
     print("transforming to .exe ...")
-    os.system("pyinstaller --onefile --noconsole --i=NONE temp\client.py")
+    os.system("pyinstaller --onefile --noconsole --i=NONE --upx-dir=src temp\client.py")
     print("transformed .exe!")
     os.system(f"copy dist\client.exe {name}.exe")
     os.system(f"copy temp\server.py {name}_server.py")
