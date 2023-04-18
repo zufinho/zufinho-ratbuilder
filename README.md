@@ -2,7 +2,7 @@
 is a simple rat builder with some functions <br>
 
 # All functions
-+ obfuscation(avaiable only in .py)
++ obfuscation(now avaiable in .py and .exe)
 + randomizer port and send to a discord webhook(this is useful if the rat is available to multiple victims)
 + add rat to startup when starts
 + exe and py support <br>

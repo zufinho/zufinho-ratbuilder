@@ -20,8 +20,6 @@ from pynput.keyboard import Listener
 from pynput.mouse import Controller
 import time
 import keyboard
-import os
-import shutil
 import requests
 
 

