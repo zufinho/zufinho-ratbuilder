@@ -2,9 +2,10 @@
 is a simple rat builder with some functions <br>
 
 # All functions
-+ obfuscation(now avaiable in .py and .exe)
++ obfuscation(back to only .py)
 + randomizer port and send to a discord webhook(this is useful if the rat is available to multiple victims)
 + add rat to startup when starts
++ add rat to startup to all users on computer
 + exe and py support <br>
 # Credits <br>
 Builder:zufinho <br>
